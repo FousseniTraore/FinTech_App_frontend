@@ -8,9 +8,8 @@ export default function App() {
         <ScrollView>
             <Text>Flexpay</Text>
             <View>
-                <Text>
-                    
-                </Text>
+                <Text>access interest-free installment plans easily.</Text>
+                <Text>Flexpay helps you access affordable laons to make payment in the merchant of you favorite and essential products.</Text>
             </View>
         </ScrollView>
     </SafeAreaView>
