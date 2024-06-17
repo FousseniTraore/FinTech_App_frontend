@@ -1,12 +1,11 @@
-import { StatusBar } from 'expo-status-bar';
+import { Stack } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function App() {
+export default function RootLayout() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+    </Stack>
   );
 }
 
