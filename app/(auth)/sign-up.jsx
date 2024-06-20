@@ -74,7 +74,7 @@ const SignUp = () => {
 
           <CustomButton
             title="Sign up"
-            handlePress={() => router.push("/sign-up")}
+            handlePress={() => router.push("/sign-in")}
             containerStyles={styles.buttonContainer}
             textStyles={styles.buttonText}
             // isLoading={isSubmitting}

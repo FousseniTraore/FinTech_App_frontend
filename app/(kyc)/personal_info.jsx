@@ -17,16 +17,15 @@ const personal_info = () => {
       });
 
   return (
-    <SafeAreaView>
-        <ScrollView>
-            <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <View style={styles.innerContainer}>
                 <Text style={styles.title}>Personal Information</Text>
-                <View>
-                    <FormField
+                <FormField
                         title="First Name"
 
                         value={form.first_name}
-                        handleChangeText={(e) => setForm({ ...form, email: e })}
+                        handleChangeText={(e) => setForm({ ...form, first_name: e })}
                         otherStyles={styles.formField}
                         keyboardType="email-address"
                     />
@@ -34,28 +33,28 @@ const personal_info = () => {
                         title="Last Name"
 
                         value={form.last_name}
-                        handleChangeText={(e) => setForm({ ...form, email: e })}
+                        handleChangeText={(e) => setForm({ ...form, last_name: e })}
                         otherStyles={styles.formField}
                         keyboardType="email-address"
                     />
                     <FormField
                         title="Date of birth"
                         value={form.dateOfBirth}
-                        handleChangeText={(e) => setForm({ ...form, email: e })}
+                        handleChangeText={(e) => setForm({ ...form, dateOfBirth: e })}
                         otherStyles={styles.formField}
                         keyboardType="email-address"
                     />
                     <FormField
                         title="Gender"
                         value={form.gender}
-                        handleChangeText={(e) => setForm({ ...form, email: e })}
+                        handleChangeText={(e) => setForm({ ...form, gender: e })}
                         otherStyles={styles.formField}
                         keyboardType="email-address"
                     />
                     <FormField
                         title="Nationality"
                         value={form.nationality}
-                        handleChangeText={(e) => setForm({ ...form, email: e })}
+                        handleChangeText={(e) => setForm({ ...form, nationality: e })}
                         otherStyles={styles.formField}
                         keyboardType="email-address"
                     />
@@ -68,7 +67,6 @@ const personal_info = () => {
                         // isLoading={isSubmitting}
                     />
 
-                </View>
             </View>
         </ScrollView>
     </SafeAreaView>
@@ -77,4 +75,58 @@ const personal_info = () => {
 
 export default personal_info
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+
+    container: {
+        flex: 1,
+        backgroundColor: '#FFFFFF', // Assuming primary color
+      },
+      scrollContainer: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+      },
+      innerContainer: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        paddingVertical: 24,
+      },
+      title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#000000',
+        marginTop: 40,
+      },
+      formField: {
+        marginTop: 28,
+        color: '#000000',
+      },
+      buttonContainer: {
+        backgroundColor: 'blue',
+        padding: 15,
+        borderRadius: 5,
+        marginTop: 28,
+      },
+      buttonText: {
+        color: '#fff',
+        fontSize: 16,
+      },
+      signupContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 20,
+      },
+      signupText: {
+        fontSize: 16,
+        color: '#AAAAAA',
+      },
+      signupLink: {
+        fontSize: 16,
+        color: '#FFD700', // Assuming secondary color
+        marginLeft: 4,
+      },
+})
