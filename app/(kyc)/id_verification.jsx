@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { launchCamera } from 'react-native-image-picker'; 
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
+import { Ionicons } from '@expo/vector-icons'; // Import Ionicons
 import { router } from "expo-router";
 
-const id_verification = () => {
+const IdVerification = () => {
   const [form, setForm] = useState({
     idType: '',
     issuing_country: '',
@@ -25,7 +26,7 @@ const id_verification = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.innerContainer}>
-          <Text style={styles.title}>Employment Information</Text>
+          <Text style={styles.title}>Identity Information</Text>
           <FormField
             title="Document Type"
             value={form.idType}
@@ -34,16 +35,16 @@ const id_verification = () => {
           />
           <FormField
             title="Issuing country"
-            value={form.occupation}
-            handleChangeText={(e) => setForm({ ...form, occupation: e })}
+            value={form.issuing_country}
+            handleChangeText={(e) => setForm({ ...form, issuing_country: e })}
             otherStyles={styles.formField}
           />
-          <CustomButton
-            title="Take a Picture of Your Document"
-            handlePress={handleTakePhoto}
-            containerStyles={styles.buttonContainer}
-            textStyles={styles.buttonText}
-          />
+          
+          <View style={styles.photoContainer}>
+            <TouchableOpacity style={styles.circleButton} onPress={handleTakePhoto}>
+              <Ionicons name="camera" size={30} color="#fff" />
+            </TouchableOpacity>
+          </View>
 
           {idDocument && (
             <Image source={{ uri: idDocument.uri }} style={styles.image} />
@@ -54,16 +55,14 @@ const id_verification = () => {
             handlePress={() => router.push("/home")}
             containerStyles={styles.buttonContainer}
             textStyles={styles.buttonText}
-            // isLoading={isSubmitting}
           />
-
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-export default id_verification ;
+export default IdVerification;
 
 const styles = StyleSheet.create({
   container: {
@@ -92,6 +91,29 @@ const styles = StyleSheet.create({
   formField: {
     marginTop: 28,
     color: '#000000',
+  },
+  photoContainer: {
+    borderColor: '#000000',
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 28,
+    width: '100%',
+  },
+  circleButton: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'blue',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: 200,
+    height: 200,
+    marginTop: 20,
   },
   buttonContainer: {
     backgroundColor: 'blue',

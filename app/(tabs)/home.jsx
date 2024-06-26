@@ -3,6 +3,7 @@ import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons'; 
 import CustomButton from '../../components/CustomButton';
+import { router } from 'expo-router';
 
 const Home = () => {
   return (
@@ -21,14 +22,14 @@ const Home = () => {
         <View style={styles.buttonRow}>
         <CustomButton
             title="Request loan"
-            handlePress={() => router.push("/personal_info")}
+            handlePress={() => router.push("/(routes)/request_loan")}
             containerStyles={styles.buttonContainer}
             textStyles={styles.buttonText}
             // isLoading={isSubmitting}
           />
           <CustomButton
             title="Repay loan"
-            handlePress={() => router.push("/personal_info")}
+            handlePress={() => router.push("/(routes)/repay_loan")}
             containerStyles={styles.buttonContainer}
             textStyles={styles.buttonText}
             // isLoading={isSubmitting}
