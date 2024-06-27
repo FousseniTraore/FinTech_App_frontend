@@ -17,7 +17,7 @@ const Home = () => {
         </View>
         <View style={styles.card}>
           <Text style={styles.balanceText}>Account Balance</Text>
-          <Text style={styles.balanceAmount}>$1,234.56</Text>
+          <Text style={styles.balanceAmount}>XOF 100,000.00</Text>
         </View>
         <View style={styles.buttonRow}>
         <CustomButton

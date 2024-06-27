@@ -13,14 +13,14 @@ const index = () => {
     <SafeAreaView style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.innerContainer}>
-            <Text style={styles.title}>Request Loan</Text>
-            <Text>Your credit limit is: 100.000 XOF</Text>
+            <Text style={styles.title}>Loan Request</Text>
+            <Text>Your credit limit is: 100,000.00 XOF</Text>
             <FormField
                 title="Enter Loan Amount"
                 value={form.amount}
                 handleChangeText={(e) => setForm({ ...form, amount: e })}
                 otherStyles={styles.formField}
-                keyboardType="email-address"
+                keyboardType="numeric"
             />
             <Text style={styles.title}>Loan repayment terms</Text>
             <Text>Your loan will be repaid over four instalments</Text>
@@ -56,7 +56,7 @@ export default index
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF', //
+        backgroundColor: '#FFFFFF',
       },
       scrollContainer: {
         flexGrow: 1,
