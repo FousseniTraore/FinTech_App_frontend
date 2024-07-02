@@ -4,18 +4,25 @@ import { Ionicons } from '@expo/vector-icons';
 import CustomButton from '../../components/CustomButton';
 import AppContext from '../AppContext';
 import FormField from '../../components/FormField';
+import { router, useRouter } from 'expo-router';
 
-const Pay_merchant = () => {
-  const { personalInfo } = useContext(AppContext);
+const PayMerchant = () => {
+  const { accountBalance, updateBalance } = useContext(AppContext);
   const [form, setForm] = useState({
     merchant: '',
     amount: '',
     description: '',
   });
-
+  const router = useRouter()
   const handleNext = () => {
-    // Handle the next button press, e.g., form validation, navigation, etc.
-    console.log(form);
+    const paymentAmount = parseFloat(form.amount);
+    if (paymentAmount <= accountBalance && paymentAmount > 0) {
+      updateBalance(-paymentAmount);
+      // navigate or show success message
+      router.push('/home')
+    } else {
+      // show error message
+    }
   };
 
   return (
@@ -24,7 +31,7 @@ const Pay_merchant = () => {
         <Text style={styles.toText}>From</Text>
         <View style={styles.card}>
           <Text style={styles.balanceText}>Account Balance</Text>
-          <Text style={styles.balanceAmount}>XOF 100,000.00</Text>
+          <Text style={styles.balanceAmount}>XOF {accountBalance.toFixed(2)}</Text>
         </View>
         <Text style={styles.toText}>To merchant</Text>
         <FormField
@@ -38,6 +45,7 @@ const Pay_merchant = () => {
           value={form.amount}
           handleChangeText={(e) => setForm({ ...form, amount: e })}
           otherStyles={styles.formField}
+          keyboardType="numeric"
         />
         <FormField
           title="Description"
@@ -46,7 +54,7 @@ const Pay_merchant = () => {
           otherStyles={styles.formField}
         />
         <CustomButton
-          title="Next"
+          title="Proceed to payment"
           handlePress={handleNext}
           containerStyles={styles.buttonContainer}
           textStyles={styles.buttonText}
@@ -56,7 +64,7 @@ const Pay_merchant = () => {
   );
 };
 
-export default Pay_merchant;
+export default PayMerchant;
 
 const styles = StyleSheet.create({
   container: {

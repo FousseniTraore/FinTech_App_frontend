@@ -9,6 +9,7 @@ import AppContext from '../AppContext';
 const Home = () => {
 
   const {personalInfo} = useContext(AppContext);
+  const { accountBalance } = useContext(AppContext);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -21,7 +22,8 @@ const Home = () => {
         </View>
         <View style={styles.card}>
           <Text style={styles.balanceText}>Account Balance</Text>
-          <Text style={styles.balanceAmount}>XOF 100,000.00</Text>
+          <Text style={styles.balanceAmount}>XOF {accountBalance.toFixed(2)}</Text>
+          {/* <Text style={styles.balanceAmount}>XOF 100,000.00</Text> */}
         </View>
         <View style={styles.buttonRow}>
         <CustomButton

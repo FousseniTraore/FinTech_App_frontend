@@ -1,20 +1,40 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FormField from '../../../components/FormField'
 import CustomButton from '../../../components/CustomButton'
 import { useState } from "react";
+import AppContext from '../../AppContext'
+import { useRouter } from 'expo-router'
 
 const index = () => {
+  const { accountBalance, creditLimit, updateBalance  } = useContext(AppContext);
+
     const [form, setForm] = useState({
         amount: "",
       });
+
+    const router = useRouter();
+
+    const handleLoanRequest = () => {
+      const loanAmount = parseFloat(form.amount);
+      if (loanAmount <= creditLimit && loanAmount > 0) {
+        updateBalance(loanAmount);
+        // navigate or show success message
+        router.push('/home');
+      } else {
+        // show error message
+        alert("Sorry, you are requesting more than your credit limit");
+      }
+    };
+
+
   return (
     <SafeAreaView style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.innerContainer}>
             <Text style={styles.title}>Loan Request</Text>
-            <Text>Your credit limit is: 100,000.00 XOF</Text>
+            <Text>Your credit limit is: {creditLimit.toFixed(2)} XOF</Text>
             <FormField
                 title="Enter Loan Amount"
                 value={form.amount}
@@ -40,10 +60,9 @@ const index = () => {
             </View>
             <CustomButton
                 title="Submit your loan request"
-                handlePress={() => router.push("/employ_info")}
+                handlePress={handleLoanRequest}
                 containerStyles={styles.buttonContainer}
                 textStyles={styles.buttonText}
-                // isLoading={isSubmitting}
             />
         </View>
         </ScrollView>
