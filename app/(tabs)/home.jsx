@@ -1,16 +1,20 @@
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons'; 
 import CustomButton from '../../components/CustomButton';
 import { router } from 'expo-router';
+import AppContext from '../AppContext';
 
 const Home = () => {
+
+  const {personalInfo} = useContext(AppContext);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
-          <Text style={styles.greeting}>Hello User</Text>
+          <Text style={styles.greeting}>Hello {personalInfo.first_name}</Text>
           <TouchableOpacity style={styles.notificationIcon}>
             <Ionicons name="notifications-outline" size={24} color="black" />
           </TouchableOpacity>

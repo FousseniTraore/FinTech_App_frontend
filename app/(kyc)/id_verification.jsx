@@ -1,25 +1,35 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { launchCamera } from 'react-native-image-picker'; 
+import { launchCamera } from 'react-native-image-picker';
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
-import { Ionicons } from '@expo/vector-icons'; // Import Ionicons
-import { router } from "expo-router";
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import AppContext from '../AppContext';
 
 const IdVerification = () => {
+  const { idVerification, setIdVerification, idDocumentPic, setIdDocumentPic } = useContext(AppContext);
+
   const [form, setForm] = useState({
     idType: '',
     issuing_country: '',
   });
   const [idDocument, setIdDocument] = useState(null);
 
-  const handleTakePhoto = () => {
-    launchCamera({ mediaType: 'photo', saveToPhotos: true }, (response) => {
-      if (!response.didCancel && !response.error) {
-        setIdDocument(response.assets[0]);
-      }
-    });
+  const router = useRouter();
+
+  const handleTakePhoto = async () => {
+    const result = await launchCamera({ mediaType: 'photo', saveToPhotos: true });
+    if (!result.didCancel && !result.error) {
+      setIdDocument(result.assets[0]);
+      setIdDocumentPic(result.assets[0]);
+    }
+  };
+
+  const handleSubmit = () => {
+    setIdVerification(form);
+    router.push('/confirm_page');
   };
 
   return (
@@ -34,12 +44,12 @@ const IdVerification = () => {
             otherStyles={styles.formField}
           />
           <FormField
-            title="Issuing country"
+            title="Issuing Country"
             value={form.issuing_country}
             handleChangeText={(e) => setForm({ ...form, issuing_country: e })}
             otherStyles={styles.formField}
           />
-          
+
           <View style={styles.photoContainer}>
             <TouchableOpacity style={styles.circleButton} onPress={handleTakePhoto}>
               <Ionicons name="camera" size={30} color="#fff" />
@@ -52,7 +62,7 @@ const IdVerification = () => {
 
           <CustomButton
             title="Submit"
-            handlePress={() => router.push("/home")}
+            handlePress={handleSubmit}
             containerStyles={styles.buttonContainer}
             textStyles={styles.buttonText}
           />

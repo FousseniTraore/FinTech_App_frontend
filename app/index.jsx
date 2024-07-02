@@ -5,6 +5,9 @@ import CustomButton from '../components/CustomButton';
 import { router } from "expo-router";
 
 export default function App() {
+
+  
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />

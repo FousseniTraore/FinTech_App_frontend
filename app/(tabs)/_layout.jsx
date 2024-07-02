@@ -18,10 +18,20 @@ const TabLayout = () => {
       <Tabs.Screen
         name="to_pay"
         options={{
-          title: "To Pay",
+          title: "Loan List",
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="list-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="pay_merchant"
+        options={{
+          title: "Pay Merchant",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="card-outline" color={color} size={size} />
           ),
         }}
       />

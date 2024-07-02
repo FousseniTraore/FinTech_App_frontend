@@ -36,6 +36,12 @@ const kycLayout = () => {
                     headerShown: false,
                 }}
             />
+            <Stack.Screen
+                name="confirm_page"
+                options={{
+                    headerShown: false,
+                }}
+            />
       </Stack>
     </>
   )
