@@ -22,6 +22,7 @@ const PayMerchant = () => {
       router.push('/home')
     } else {
       // show error message
+      alert("Sorry your payement cannot be proceeded. Kindly check your balance")
     }
   };
 

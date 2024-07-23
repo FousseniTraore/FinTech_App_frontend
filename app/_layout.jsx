@@ -9,6 +9,8 @@ export default function RootLayout() {
   const [employmentInfo, setEmploymentInfo] = useState({});
   const [idVerification, setIdVerification] = useState({});
   const [idDocumentPic, setIdDocumentPic] = useState({});
+  const [uploadDocument, setUploadDocument] = useState({});
+
 
   const [accountBalance, setAccountBalance] = useState(0); // initial balance
   const creditLimit = 100000; // set credit limit by using machine learning
@@ -27,6 +29,8 @@ export default function RootLayout() {
     setIdVerification,
     idDocumentPic,
     setIdDocumentPic,
+    uploadDocument,
+    setUploadDocument,
     accountBalance,
     setAccountBalance,
     creditLimit,

@@ -22,7 +22,7 @@ const EmployInfo = () => {
 
     const handleNext = () => {
         router.push({
-            pathname: 'id_verification',
+            pathname: 'upload_doc',
         });
         setEmploymentInfo(form)
     };

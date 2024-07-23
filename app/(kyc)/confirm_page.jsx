@@ -2,30 +2,67 @@ import React, { useContext, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomButton from '../../components/CustomButton';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter } from 'expo-router';
 import AppContext from '../AppContext';
+import axios from 'axios';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 const ReviewSubmit = () => {
-  const { personalInfo, contactInfo, employmentInfo, idVerification } = useContext(AppContext);
-
+  const { personalInfo, contactInfo, employmentInfo, uploadDocument } = useContext(AppContext);
   const router = useRouter();
 
-  useEffect(()=>{
-    console.log("PERSONAL INFORMATION HERE", personalInfo, contactInfo, employmentInfo, idVerification)
-  }, [])
+  useEffect(() => {
+    console.log("PERSONAL INFORMATION HERE", personalInfo, contactInfo, employmentInfo)
+  }, []);
 
-  const handleSubmit = () => {
-    // Implement your submit logic here, e.g., send data to backend, navigate to success screen, etc.
-    console.log('Submitting data:', {
-      first_name: personalInfo.first_name,
-      email: contactInfo.email,
-      occupation: employmentInfo.occupation,
-      idType: idVerification.idType,
-    });
-    // For example, navigate back to the home screen after submission
-    router.push("/home");
-  };
+  const handleSubmit = async () => {
+    // Convert images to base64
+    const convertImageToBase64 = async (uri) => {
+      if (!uri) return null;
+      const manipulatedImage = await ImageManipulator.manipulateAsync(uri, [], { base64: true });
+      return manipulatedImage.base64;
+    };
   
+    // Convert images and prepare JSON payload
+    const uploadIdDocumentBase64 = uploadDocument.idDocument ? await convertImageToBase64(uploadDocument.idDocument) : null;
+    const salaryTaxDocumentBase64 = uploadDocument.salaryTaxDocument ? await convertImageToBase64(uploadDocument.salaryTaxDocument) : null;
+    const addressDocumentBase64 = uploadDocument.addressDocument ? await convertImageToBase64(uploadDocument.addressDocument) : null;
+  
+    const requestData = {
+      first_name: personalInfo.first_name,
+      last_name: personalInfo.last_name,
+      dateOfBirth: personalInfo.dateOfBirth,
+      gender: personalInfo.gender,
+      nationality: personalInfo.nationality,
+      email: contactInfo.email,
+      phone_number: contactInfo.phone_number,
+      street_address: contactInfo.street_address,
+      city: contactInfo.city,
+      province_state: contactInfo.province_state,
+      postal_code: contactInfo.postal_code,
+      country: contactInfo.country,
+      employment_status: employmentInfo.employement_status,
+      occupation: employmentInfo.occupation,
+      employer_name: employmentInfo.employer_name,
+      monthly_income: employmentInfo.monthly_income,
+      year_of_employment: employmentInfo.year_of_employment,
+      uploadIdDocument: uploadIdDocumentBase64,
+      salaryTaxDocument: salaryTaxDocumentBase64,
+      addressDocument: addressDocumentBase64
+    };
+  
+    try {
+      const response = await axios.post('https://osotgv9nng.execute-api.us-east-1.amazonaws.com/dev/user_info', requestData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log('Success:', response.data);
+      router.push("/home");
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -65,14 +102,16 @@ const ReviewSubmit = () => {
             <Text>Year of Employment: {employmentInfo.year_of_employment}</Text>
           </View>
 
-          {/* Display ID Verification Information */}
+          {/* Document uploaded */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>ID Verification:</Text>
-            <Text>ID Type: {idVerification.idType}</Text>
-            <Text>Issuing Country: {idVerification.issuing_country}</Text>
-            {idVerification.idDocument && (
-              <Image source={{ uri: idVerification.idDocument.uri }} style={styles.image} />
-            )}
+            <Text style={styles.sectionTitle}>ID Document</Text>
+            {uploadDocument.idDocument && <Image source={{ uri: uploadDocument.idDocument }} style={styles.image} />}
+
+            <Text style={styles.sectionTitle}>Salary/Tax Document</Text>
+            {uploadDocument.salaryTaxDocument && <Image source={{ uri: uploadDocument.salaryTaxDocument }} style={styles.image} />}
+
+            <Text style={styles.sectionTitle}>Address Document</Text>
+            {uploadDocument.addressDocument && <Image source={{ uri: uploadDocument.addressDocument }} style={styles.image} />}
           </View>
 
           {/* Submit Button */}

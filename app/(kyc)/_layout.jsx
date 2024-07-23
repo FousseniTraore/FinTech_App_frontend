@@ -37,6 +37,12 @@ const kycLayout = () => {
                 }}
             />
             <Stack.Screen
+                name="upload_doc"
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
                 name="confirm_page"
                 options={{
                     headerShown: false,
