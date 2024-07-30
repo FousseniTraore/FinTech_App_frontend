@@ -48,6 +48,12 @@ const kycLayout = () => {
                     headerShown: false,
                 }}
             />
+            <Stack.Screen
+                name="success_kyc"
+                options={{
+                    headerShown: false,
+                }}
+            />
       </Stack>
     </>
   )

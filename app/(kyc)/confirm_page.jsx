@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View, Image } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { ScrollView, StyleSheet, Text, View, Image, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomButton from '../../components/CustomButton';
 import { useRouter } from 'expo-router';
@@ -10,24 +10,27 @@ import * as ImageManipulator from 'expo-image-manipulator';
 const ReviewSubmit = () => {
   const { personalInfo, contactInfo, employmentInfo, uploadDocument } = useContext(AppContext);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     console.log("PERSONAL INFORMATION HERE", personalInfo, contactInfo, employmentInfo)
   }, []);
 
   const handleSubmit = async () => {
+    setLoading(true);
+
     // Convert images to base64
     const convertImageToBase64 = async (uri) => {
       if (!uri) return null;
       const manipulatedImage = await ImageManipulator.manipulateAsync(uri, [], { base64: true });
       return manipulatedImage.base64;
     };
-  
+
     // Convert images and prepare JSON payload
     const uploadIdDocumentBase64 = uploadDocument.idDocument ? await convertImageToBase64(uploadDocument.idDocument) : null;
     const salaryTaxDocumentBase64 = uploadDocument.salaryTaxDocument ? await convertImageToBase64(uploadDocument.salaryTaxDocument) : null;
     const addressDocumentBase64 = uploadDocument.addressDocument ? await convertImageToBase64(uploadDocument.addressDocument) : null;
-  
+
     const requestData = {
       first_name: personalInfo.first_name,
       last_name: personalInfo.last_name,
@@ -50,7 +53,7 @@ const ReviewSubmit = () => {
       salaryTaxDocument: salaryTaxDocumentBase64,
       addressDocument: addressDocumentBase64
     };
-  
+
     try {
       const response = await axios.post('https://osotgv9nng.execute-api.us-east-1.amazonaws.com/dev/user_info', requestData, {
         headers: {
@@ -58,9 +61,11 @@ const ReviewSubmit = () => {
         },
       });
       console.log('Success:', response.data);
-      router.push("/home");
+      router.push("/success_kyc");
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -68,59 +73,68 @@ const ReviewSubmit = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.innerContainer}>
-          <Text style={styles.title}>Review Information</Text>
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#0000ff" />
+              <Text style={styles.loadingText}>Verification in process, please wait...</Text>
+            </View>
+          ) : (
+            <>
+              <Text style={styles.title}>Review Information</Text>
 
-          {/* Display Personal Information */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Personal Information:</Text>
-            <Text>First Name: {personalInfo.first_name}</Text>
-            <Text>Last Name: {personalInfo.last_name}</Text>
-            <Text>Date of Birth: {personalInfo.dateOfBirth}</Text>
-            <Text>Gender: {personalInfo.gender}</Text>
-            <Text>Nationality: {personalInfo.nationality}</Text>
-          </View>
+              {/* Display Personal Information */}
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Personal Information:</Text>
+                <Text>First Name: {personalInfo.first_name}</Text>
+                <Text>Last Name: {personalInfo.last_name}</Text>
+                <Text>Date of Birth: {personalInfo.dateOfBirth}</Text>
+                <Text>Gender: {personalInfo.gender}</Text>
+                <Text>Nationality: {personalInfo.nationality}</Text>
+              </View>
 
-          {/* Display Contact Information */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Contact Information:</Text>
-            <Text>Email: {contactInfo.email}</Text>
-            <Text>Phone Number: {contactInfo.phone_number}</Text>
-            <Text>Street Address: {contactInfo.street_address}</Text>
-            <Text>City: {contactInfo.city}</Text>
-            <Text>Province/State: {contactInfo.province_state}</Text>
-            <Text>Postal Code: {contactInfo.postal_code}</Text>
-            <Text>Country: {contactInfo.country}</Text>
-          </View>
+              {/* Display Contact Information */}
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Contact Information:</Text>
+                <Text>Email: {contactInfo.email}</Text>
+                <Text>Phone Number: {contactInfo.phone_number}</Text>
+                <Text>Street Address: {contactInfo.street_address}</Text>
+                <Text>City: {contactInfo.city}</Text>
+                <Text>Province/State: {contactInfo.province_state}</Text>
+                <Text>Postal Code: {contactInfo.postal_code}</Text>
+                <Text>Country: {contactInfo.country}</Text>
+              </View>
 
-          {/* Display Employment Information */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Employment Information:</Text>
-            <Text>Employment Status: {employmentInfo.employement_status}</Text>
-            <Text>Occupation: {employmentInfo.occupation}</Text>
-            <Text>Employer Name: {employmentInfo.employer_name}</Text>
-            <Text>Monthly Income: {employmentInfo.monthly_income}</Text>
-            <Text>Year of Employment: {employmentInfo.year_of_employment}</Text>
-          </View>
+              {/* Display Employment Information */}
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Employment Information:</Text>
+                <Text>Employment Status: {employmentInfo.employement_status}</Text>
+                <Text>Occupation: {employmentInfo.occupation}</Text>
+                <Text>Employer Name: {employmentInfo.employer_name}</Text>
+                <Text>Monthly Income: {employmentInfo.monthly_income}</Text>
+                <Text>Year of Employment: {employmentInfo.year_of_employment}</Text>
+              </View>
 
-          {/* Document uploaded */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>ID Document</Text>
-            {uploadDocument.idDocument && <Image source={{ uri: uploadDocument.idDocument }} style={styles.image} />}
+              {/* Document uploaded */}
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>ID Document</Text>
+                {uploadDocument.idDocument && <Image source={{ uri: uploadDocument.idDocument }} style={styles.image} />}
 
-            <Text style={styles.sectionTitle}>Salary/Tax Document</Text>
-            {uploadDocument.salaryTaxDocument && <Image source={{ uri: uploadDocument.salaryTaxDocument }} style={styles.image} />}
+                <Text style={styles.sectionTitle}>Salary/Tax Document</Text>
+                {uploadDocument.salaryTaxDocument && <Image source={{ uri: uploadDocument.salaryTaxDocument }} style={styles.image} />}
 
-            <Text style={styles.sectionTitle}>Address Document</Text>
-            {uploadDocument.addressDocument && <Image source={{ uri: uploadDocument.addressDocument }} style={styles.image} />}
-          </View>
+                <Text style={styles.sectionTitle}>Address Document</Text>
+                {uploadDocument.addressDocument && <Image source={{ uri: uploadDocument.addressDocument }} style={styles.image} />}
+              </View>
 
-          {/* Submit Button */}
-          <CustomButton
-            title="Submit"
-            handlePress={handleSubmit}
-            containerStyles={styles.buttonContainer}
-            textStyles={styles.buttonText}
-          />
+              {/* Submit Button */}
+              <CustomButton
+                title="Submit"
+                handlePress={handleSubmit}
+                containerStyles={styles.buttonContainer}
+                textStyles={styles.buttonText}
+              />
+            </>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -179,5 +193,15 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
+  },
+  loadingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  loadingText: {
+    marginTop: 20,
+    fontSize: 18,
+    color: '#000000',
   },
 });

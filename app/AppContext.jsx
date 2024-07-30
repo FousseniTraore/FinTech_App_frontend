@@ -1,3 +1,9 @@
-import { createContext } from "react";
+import React, { createContext, useContext } from 'react';
 
-export default AppContext = createContext();
+const AppContext = createContext();
+
+export const useGlobalContext = () => {
+  return useContext(AppContext);
+};
+
+export default AppContext;

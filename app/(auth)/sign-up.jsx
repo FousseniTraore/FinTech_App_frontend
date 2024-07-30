@@ -1,60 +1,48 @@
-import { useState } from "react";
-import { Link, router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Dimensions, Alert, Image, StyleSheet } from "react-native";
+import { useState } from 'react';
+import { Link, router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, ScrollView, Alert, StyleSheet } from 'react-native';
 
-
-import CustomButton from "../../components/CustomButton";
-import FormField from "../../components/FormField";
-// import { getCurrentUser, signIn } from "../../lib/appwrite";
-// import { useGlobalContext } from "../../context/GlobalProvider";
+import CustomButton from '../../components/CustomButton';
+import FormField from '../../components/FormField';
+import { signUp } from '../../apiServices/authApi';
 
 const SignUp = () => {
-  // const { setUser, setIsLogged } = useGlobalContext();
-  // const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
+    username: '',
+    email: '',
+    password: '',
   });
 
-  // const submit = async () => {
-  //   if (form.email === "" || form.password === "") {
-  //     Alert.alert("Error", "Please fill in all fields");
-  //     return;
-  //   }
+  const submit = async () => {
+    if (form.email === '' || form.password === '') {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
 
-  //   setSubmitting(true);
-
-  //   try {
-  //     await signIn(form.email, form.password);
-  //     const result = await getCurrentUser();
-  //     setUser(result);
-  //     setIsLogged(true);
-
-  //     Alert.alert("Success", "User signed in successfully");
-  //     router.replace("/home");
-  //   } catch (error) {
-  //     Alert.alert("Error", error.message);
-  //   } finally {
-  //     setSubmitting(false);
-  //   }
-  // };
+    try {
+      const result = await signUp(form);
+      Alert.alert('Success', 'User signed up successfully');
+      // Optionally, save the token or navigate to another screen
+      console.log(result.token);
+      router.push('/sign-in');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.innerContainer}>
+          <Text style={styles.title}>Sign up to Flexpay</Text>
 
-          <Text style={styles.title}>
-            Sign up to Flexpay
-          </Text>
           <FormField
             title="Username"
             value={form.username}
-            handleChangeText={(e) => setForm({ ...form, email: e })}
+            handleChangeText={(e) => setForm({ ...form, username: e })}
             otherStyles={styles.formField}
-            keyboardType="email-address"
+            keyboardType="default"
           />
 
           <FormField
@@ -70,24 +58,19 @@ const SignUp = () => {
             value={form.password}
             handleChangeText={(e) => setForm({ ...form, password: e })}
             otherStyles={styles.formField}
+            secureTextEntry
           />
 
           <CustomButton
             title="Sign up"
-            handlePress={() => router.push("/sign-in")}
+            handlePress={submit}
             containerStyles={styles.buttonContainer}
             textStyles={styles.buttonText}
-            // isLoading={isSubmitting}
           />
 
           <View style={styles.signupContainer}>
-            <Text style={styles.signupText}>
-              Already have an account?
-            </Text>
-            <Link
-              href="/sign-in"
-              style={styles.signupLink}
-            >
+            <Text style={styles.signupText}>Already have an account?</Text>
+            <Link href="/sign-in" style={styles.signupLink}>
               Log in
             </Link>
           </View>
@@ -100,7 +83,7 @@ const SignUp = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF', // Assuming primary color
+    backgroundColor: '#FFFFFF',
   },
   scrollContainer: {
     flexGrow: 1,
@@ -147,7 +130,7 @@ const styles = StyleSheet.create({
   },
   signupLink: {
     fontSize: 16,
-    color: '#FFD700', // Assuming secondary color
+    color: '#FFD700',
     marginLeft: 4,
   },
 });

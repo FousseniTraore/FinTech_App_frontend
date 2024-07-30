@@ -1,9 +1,9 @@
 import { Stack } from 'expo-router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AppContext from './AppContext';
+import { getCurrentUser } from '../lib/appwrite';
 
 export default function RootLayout() {
-
   const [personalInfo, setPersonalInfo] = useState({});
   const [contactInfo, setContactInfo] = useState({});
   const [employmentInfo, setEmploymentInfo] = useState({});
@@ -11,12 +11,34 @@ export default function RootLayout() {
   const [idDocumentPic, setIdDocumentPic] = useState({});
   const [uploadDocument, setUploadDocument] = useState({});
 
-
   const [accountBalance, setAccountBalance] = useState(0); // initial balance
   const creditLimit = 100000; // set credit limit by using machine learning
   const updateBalance = (amount) => {
     setAccountBalance((prevBalance) => prevBalance + amount);
   };
+
+  const [user, setUser] = useState(null);
+  const [isLogged, setIsLogged] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getCurrentUser()
+      .then((res) => {
+        if (res) {
+          setIsLogged(true);
+          setUser(res);
+        } else {
+          setIsLogged(false);
+          setUser(null);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   const values = {
     personalInfo,
@@ -34,13 +56,17 @@ export default function RootLayout() {
     accountBalance,
     setAccountBalance,
     creditLimit,
-    updateBalance
-  }
-
+    updateBalance,
+    user,
+    setUser,
+    isLogged,
+    setIsLogged,
+    loading
+  };
 
   return (
     <AppContext.Provider value={values}>
-    <Stack>
+      <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(routes)" options={{ headerShown: false}} />
         <Stack.Screen name="(routes)/repay_loan" title="Loan repayment" options={{ headerShown: false}} />
@@ -48,8 +74,7 @@ export default function RootLayout() {
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(kyc)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+      </Stack>
     </AppContext.Provider>
   );
 }
-
