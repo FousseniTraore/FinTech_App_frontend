@@ -9,6 +9,7 @@ import { useRouter } from 'expo-router'
 
 const index = () => {
   const { accountBalance, creditLimit, updateBalance  } = useContext(AppContext);
+  const [result, setResult] = useState(null); //for handle predict
 
     const [form, setForm] = useState({
         amount: "",
@@ -25,6 +26,15 @@ const index = () => {
       } else {
         // show error message
         alert("Sorry, you are requesting more than your credit limit");
+      }
+    };
+
+    const handlePredict = async () => {
+      try {
+        const response = await axios.post('http://localhost:3000/predict', { input: JSON.parse(input) });
+        setResult(response.data.result);
+      } catch (error) {
+        console.error(error);
       }
     };
 
